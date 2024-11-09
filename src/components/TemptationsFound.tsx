@@ -1,7 +1,20 @@
+import { useEffect, useState } from "react";
 import { State } from "../App";
+import { getCurrentTab } from "../utils/getCurrentTab";
 
 export default function TemptationsFound({ state }: { state: State }) {
-  // a beautiful card that shows a number with a title "tempations hidden on this page"
+  const [hidden, setHidden] = useState(0);
+
+  useEffect(() => {
+    getCurrentTab().then((tab) => {
+      if (!tab.id) return;
+      chrome.action.getBadgeText({ tabId: tab.id }, function (result) {
+        setHidden(parseInt(result));
+      });
+    })
+  }, []);
+
+
   return (
     <div className="stats shadow bg-neutral">
       <div className="stat place-items-center">
@@ -12,7 +25,7 @@ export default function TemptationsFound({ state }: { state: State }) {
           ) : state === 'deactivated' ? (
             <div className="stat-value text-warning">Deactivated</div>
           ) : (
-            <div className="stat-value text-secondary">22</div>
+            <div className="stat-value text-secondary">{hidden}</div>
           )
         }
       </div>

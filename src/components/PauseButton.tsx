@@ -1,27 +1,25 @@
-import { StateStore } from "../App";
+import { State, StateStore } from "../App";
 import PauseIcon from "./PauseIcon";
+import { setPaused } from "../utils/setPaused";
 
 export default function PauseButton({ state, setState }: StateStore) {
-  const isPaused = state === 'paused';
+  const isPaused = (value: State) => value === 'paused';
 
   function togglePause() {
-    // getCurrentTabHost().then((tab) => {
-    // if (tab && tab.url) {
-    // const url = new URL(tab.url);
-    // setPath(url.pathname);
-    // setHubId(url.hostname);
-    // }
-    // });
-    setState(isPaused ? null : 'paused')
+    setState((state) => {
+      const newValue = isPaused(state) ? null : 'paused';
+      setPaused(!!newValue);
+      return newValue;
+    })
   };
 
   return (
-    <button className={`w-full btn btn-sm ${isPaused
+    <button className={`w-full btn btn-sm ${isPaused(state)
       ? 'btn-warning'
       : 'btn-primary btn-outline'
       }`}
       onClick={togglePause}>
-      {!isPaused && <PauseIcon />} {isPaused ? 'Resume' : 'Pause 10 min'}
+      {!isPaused(state) && <PauseIcon />} {isPaused(state) ? 'Resume' : 'Pause 10 min'}
     </button>
   );
 }

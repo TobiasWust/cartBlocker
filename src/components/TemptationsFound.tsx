@@ -7,7 +7,7 @@ export default function TemptationsFound({ state }: { state: State }) {
 
   useEffect(() => {
     getCurrentTab().then((tab) => {
-      if (!tab.id) return;
+      if (!tab?.id) return;
       chrome.action.getBadgeText({ tabId: tab.id }, function (result) {
         setHidden(parseInt(result));
       });

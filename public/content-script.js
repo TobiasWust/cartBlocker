@@ -13,9 +13,8 @@ const evilWords = [
   "장바구니", "구매", "주문"
 ]
 
-let hidden = 0;
 let evilElements = [];
-let timeoutTimer;
+const hostname = window.location.hostname;
 
 function hideElements() {
   evilElements.forEach(e => e.classList.add('cart-hopper-hidden'));
@@ -45,36 +44,32 @@ async function main() {
     }
   })
   const state = await getState();
-  if (state === null) {
-    hideElements();
-  }
+  if (!state) hideElements();
   chrome.runtime.sendMessage({ hidden });
 }
 
 main();
 setTimeout(main, 3000); // for weird websites
+setTimeout(main, 5000); // for weird websites
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'pause') {
     showElements();
-    setHostState(request.hostname, 'paused')
-    timeoutTimer = setTimeout(() => {
-      hideElements();
-      setHostState(request.hostname, null)
-    }, 10000);
-    // }, 600000);
+    chrome.runtime.sendMessage({ action: 'startTimer' });
+    setHostState(hostname, 'paused')
   }
   if (request.action === 'resume') {
-    if (timeoutTimer) clearTimeout(timeoutTimer);
     hideElements();
-    setHostState(request.hostname, null)
+    chrome.runtime.sendMessage({ action: 'clearTimer' });
+    setHostState(hostname, null)
   }
   if (request.action === 'deactivated') {
     showElements();
-    setHostState(request.hostname, 'deactivated')
+    setHostState(hostname, 'deactivated')
   }
   if (request.action === 'pageLoaded') {
     main();
     setTimeout(main, 3000); // for weird websites
+    setTimeout(main, 5000); // for weird websites
   }
 });

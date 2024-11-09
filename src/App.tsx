@@ -15,7 +15,8 @@ function App() {
 
   useEffect(() => {
     getCurrentTab().then((tab) => {
-      if (!tab.id || !tab?.url) return;
+      console.log(tab);
+      if (!tab?.id || !tab?.url) return;
       const hostname = new URL(tab.url).hostname;
       if (!hostname) return;
       chrome.storage.local.get(hostname).then((data) => {
@@ -23,6 +24,13 @@ function App() {
           setState(data[hostname]);
         }
       })
+    });
+
+    console.log('App mounted');
+    chrome.runtime.onMessage.addListener((request) => {
+      console.log('request', request);
+      if (request.action === 'clearTimer') setState(null);
+      return undefined;
     });
   }, [setState]);
 

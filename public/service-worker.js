@@ -1,11 +1,23 @@
+let timeoutTimer;
 chrome.runtime.onMessage.addListener(function (request, sender) {
-  if (request.hidden === undefined) return;
-  chrome.action.setBadgeText(
-    {
-      text: request.hidden > 0 ? request.hidden.toString() : '',
-      tabId: sender.tab.id
-    }
-  );
+  if (request.hidden) {
+    chrome.action.setBadgeText(
+      {
+        text: request.hidden > 0 ? request.hidden.toString() : '',
+        tabId: sender.tab.id
+      }
+    );
+  }
+
+  if (request.action === 'startTimer') {
+    timeoutTimer = setTimeout(() => {
+      console.log('komisch');
+      chrome.tabs.sendMessage(sender.tab.id, { action: 'resume' });
+    }, 600000);
+  }
+  if (request.action === 'clearTimer') {
+    clearTimeout(timeoutTimer);
+  }
 });
 
 chrome.webNavigation.onCompleted.addListener((details) => {

@@ -30,7 +30,10 @@ function showElements() {
 async function main() {
   hidden = 0;
   document.querySelectorAll('a, button, span, input').forEach((e) => {
-    if (evilWords.some(word => e.textContent.toLowerCase().includes(word))) {
+    if (evilWords.some(word =>
+      e.textContent.toLowerCase().includes(word)
+      || e.title?.toLowerCase().includes(word)
+    )) {
       evilElements.push(e);
       hidden++;
     }
@@ -54,7 +57,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.storage.onChanged.addListener((data) => {
-  console.log({ data });
   if (data[hostname]) {
     if (data[hostname].newValue === 'deactivated') {
       showElements();

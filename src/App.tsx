@@ -13,7 +13,6 @@ function App() {
   const [state, setState] = useState<State>(null)
 
   function handleStorageChange(changes: { [key: string]: chrome.storage.StorageChange }, hostname: string) {
-    console.log(changes);
     if (changes[hostname]) {
       setState(changes[hostname].newValue);
     }

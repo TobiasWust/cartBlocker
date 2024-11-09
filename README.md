@@ -1,50 +1,40 @@
-# React + TypeScript + Vite
+# cartBlocker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**cartBlocker** is a Chrome extension that helps you fighting your online shopping addiction. It blocks the checkout button on websites, so you can't buy anything on impulse. You can pause the extension for a certain amount of time, so you can still buy things you really need.
+---
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Block the checkout button** on websites
+- **Pause the extension** for a certain amount of time
+- **Deactivate** if you really have to
+---
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+This extension is built with **Vite** and **React**.
 
-- Configure the top-level `parserOptions` property like this:
+### Steps
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/TobiasWust/hostHopper.git
+1. **Install dependencies**:
+   ```bash
+   npm install
+1. **Build the extension:**:
+   ```bash
+   npm run build
+1. **Load the extension in Chrome**:
+    - Open Chrome and go to chrome://extensions/.
+    - Enable Developer mode (toggle it on in the top-right corner).
+    - Click on Load unpacked and select the dist folder from the repository.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## About the Developer
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+I'm a freelance developer available for hire! I specialize in building custom software solutions and Chrome extensions like HostHopper. If you're interested in working together, feel free to check out my portfolio and contact me through my website:
+
+[**wust.dev**](https://wust.dev)
+

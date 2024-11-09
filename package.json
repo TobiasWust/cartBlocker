@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chrome-types": "^0.1.318",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

@@ -1,6 +1,6 @@
 const evilWords = [
-  "wagen", "kaufen", "bestellen",
-  "cart", "buy", "order",
+  "wagen", "kaufen", "bestellen", "warenkorb", "kasse",
+  "cart", "buy", "order", "checkout",
   "carrito", "comprar", "orden",
   "panier", "acheter", "commande",
   "carrello", "compra", "ordine",

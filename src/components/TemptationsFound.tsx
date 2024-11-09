@@ -9,10 +9,15 @@ export default function TemptationsFound({ state }: { state: State }) {
     getCurrentTab().then((tab) => {
       if (!tab?.id) return;
       chrome.action.getBadgeText({ tabId: tab.id }, function (result) {
-        setHidden(parseInt(result));
+        setHidden(Number(result));
       });
+      setTimeout(() => {
+        chrome.action.getBadgeText({ tabId: tab.id }, function (result) {
+          setHidden(Number(result));
+        });
+      }, 500);
     })
-  }, []);
+  }, [state]);
 
 
   return (

@@ -15,38 +15,35 @@ const evilWords = [
 
 let evilElements = [];
 const hostname = window.location.hostname;
+let hidden = 0;
 
 function hideElements() {
   evilElements.forEach(e => e.classList.add('cart-hopper-hidden'));
+  chrome.runtime.sendMessage({ hidden });
 }
 
 function showElements() {
   evilElements.forEach(e => e.classList.remove('cart-hopper-hidden'));
-}
-
-async function getState() {
-  const hostname = window.location.hostname;
-  if (!hostname) return;
-  const data = await chrome.storage.local.get(hostname)
-  return data[hostname]
+  chrome.runtime.sendMessage({ hidden: 0 });
 }
 
 async function main() {
-  let hidden = 0;
+  hidden = 0;
   document.querySelectorAll('a, button, span, input').forEach((e) => {
     if (evilWords.some(word => e.textContent.toLowerCase().includes(word))) {
       evilElements.push(e);
       hidden++;
     }
-  })
-  const state = await getState();
-  if (!state) hideElements();
-  chrome.runtime.sendMessage({ hidden });
-}
+  });
 
-main();
-setTimeout(main, 3000); // for weird websites
-setTimeout(main, 5000); // for weird websites
+  chrome.storage.local.get(hostname).then((data) => {
+    if (data[hostname]) {
+      showElements();
+    } else {
+      hideElements();
+    }
+  })
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'pageLoaded') {
@@ -56,26 +53,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-getCurrentTab().then(tab => {
-  if (!tab?.id || !tab?.url) return;
-  const hostname = new URL(tab.url).hostname;
-  if (!hostname) return;
-
-  chrome.storage.local.get(hostname).then((data) => {
-    if (data[hostname]) {
-      hideElements();
-    } else {
+chrome.storage.onChanged.addListener((data) => {
+  console.log({ data });
+  if (data[hostname]) {
+    if (data[hostname].newValue === 'deactivated') {
       showElements();
+    } else if (data[hostname].newValue === 'paused') {
+      showElements();
+      chrome.runtime.sendMessage({ action: 'setTimer', hostname });
+    } else {
+      hideElements();
+      chrome.runtime.sendMessage({ action: 'clearTimer' });
     }
-  })
-
-  chrome.storage.onChanged.addListener((data) => {
-    if (data[hostname]) {
-      if (!data[hostname]) {
-        hideElements();
-      } else {
-        showElements();
-      }
-    }
-  });
+  }
 });

@@ -7,9 +7,9 @@ export function setPaused(paused: boolean) {
     if (!hostname) return;
 
     if (paused) {
-      chrome.tabs.sendMessage(tab.id, { action: "pause", hostname });
+      chrome.storage.local.set({ [hostname]: 'paused' });
     } else {
-      chrome.tabs.sendMessage(tab.id, { action: "resume", hostname });
+      chrome.storage.local.set({ [hostname]: null });
     }
   });
 }

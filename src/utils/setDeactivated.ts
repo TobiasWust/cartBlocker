@@ -7,9 +7,9 @@ export function setDeactivated(deactivated: boolean) {
     if (!hostname) return;
 
     if (deactivated) {
-      chrome.tabs.sendMessage(tab.id, { action: "deactivated", hostname });
+      chrome.storage.local.set({ [hostname]: 'deactivated' });
     } else {
-      chrome.tabs.sendMessage(tab.id, { action: "resume", hostname });
+      chrome.storage.local.set({ [hostname]: null });
     }
   });
 }

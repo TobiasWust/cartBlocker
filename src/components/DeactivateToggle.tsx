@@ -1,15 +1,12 @@
 import { State, StateStore } from "../App";
 import { setDeactivated } from "../utils/setDeactivated";
 
-export default function DeactivateToggle({ state, setState }: StateStore) {
+export default function DeactivateToggle({ state }: StateStore) {
   const isDeactivated = (value: State) => value === 'deactivated';
 
   function toggleDeactivated() {
-    setState((state) => {
-      const newValue = isDeactivated(state) ? null : 'deactivated';
-      setDeactivated(!!newValue);
-      return newValue;
-    })
+    const newValue = isDeactivated(state) ? null : 'deactivated';
+    setDeactivated(!!newValue);
   };
 
   return (

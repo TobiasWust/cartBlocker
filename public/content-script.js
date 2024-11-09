@@ -24,10 +24,6 @@ function showElements() {
   evilElements.forEach(e => e.classList.remove('cart-hopper-hidden'));
 }
 
-function setHostState(host, state) {
-  chrome.storage.local.set({ [host]: state });
-}
-
 async function getState() {
   const hostname = window.location.hostname;
   if (!hostname) return;
@@ -53,22 +49,33 @@ setTimeout(main, 3000); // for weird websites
 setTimeout(main, 5000); // for weird websites
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'pause') {
-    showElements();
-    chrome.runtime.sendMessage({ action: 'startTimer' });
-    setHostState(hostname, 'paused')
-  }
-  if (request.action === 'resume') {
-    hideElements();
-    chrome.runtime.sendMessage({ action: 'clearTimer', host: hostname });
-  }
-  if (request.action === 'deactivated') {
-    showElements();
-    setHostState(hostname, 'deactivated')
-  }
   if (request.action === 'pageLoaded') {
     main();
     setTimeout(main, 3000); // for weird websites
     setTimeout(main, 5000); // for weird websites
   }
+});
+
+getCurrentTab().then(tab => {
+  if (!tab?.id || !tab?.url) return;
+  const hostname = new URL(tab.url).hostname;
+  if (!hostname) return;
+
+  chrome.storage.local.get(hostname).then((data) => {
+    if (data[hostname]) {
+      hideElements();
+    } else {
+      showElements();
+    }
+  })
+
+  chrome.storage.onChanged.addListener((data) => {
+    if (data[hostname]) {
+      if (!data[hostname]) {
+        hideElements();
+      } else {
+        showElements();
+      }
+    }
+  });
 });

@@ -2,15 +2,12 @@ import { State, StateStore } from "../App";
 import PauseIcon from "./PauseIcon";
 import { setPaused } from "../utils/setPaused";
 
-export default function PauseButton({ state, setState }: StateStore) {
+export default function PauseButton({ state }: StateStore) {
   const isPaused = (value: State) => value === 'paused';
 
   function togglePause() {
-    setState((state) => {
-      const newValue = isPaused(state) ? null : 'paused';
-      setPaused(!!newValue);
-      return newValue;
-    })
+    const newValue = isPaused(state) ? null : 'paused';
+    setPaused(!!newValue);
   };
 
   return (

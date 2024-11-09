@@ -7,39 +7,45 @@ import { getCurrentTab } from './utils/getCurrentTab';
 export type State = 'paused' | 'deactivated' | null;
 export type StateStore = {
   state: State;
-  setState: React.Dispatch<React.SetStateAction<State>>;
 }
 
 function App() {
   const [state, setState] = useState<State>(null)
 
+  function handleStorageChange(changes: { [key: string]: chrome.storage.StorageChange }, hostname: string) {
+    if (changes[hostname]) {
+      setState(changes[hostname].newValue);
+    }
+  }
+
   useEffect(() => {
-    getCurrentTab().then((tab) => {
-      console.log(tab);
+    async function prepareStorage() {
+      const tab = await getCurrentTab();
       if (!tab?.id || !tab?.url) return;
       const hostname = new URL(tab.url).hostname;
       if (!hostname) return;
-      chrome.storage.local.get(hostname).then((data) => {
-        if (data[hostname]) {
-          setState(data[hostname]);
-        }
-      })
-    });
 
-    console.log('App mounted');
-    chrome.runtime.onMessage.addListener((request) => {
-      console.log('request', request);
-      if (request.action === 'clearTimer') setState(null);
-      return undefined;
-    });
+      chrome.storage.local.get(hostname).then((data) => {
+        if (data[hostname]) setState(data[hostname])
+      })
+
+      chrome.storage.onChanged.addListener((changes) => handleStorageChange(changes, hostname));
+    }
+
+    prepareStorage();
+
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
+
   }, [setState]);
 
   return (
     <div className='max-w-[90%] mx-auto'>
-      <Navbar state={state} setState={setState} />
+      <Navbar state={state} />
       <div className='grid'>
         <TemptationsFound state={state} />
-        <DeactivateToggle state={state} setState={setState} />
+        <DeactivateToggle state={state} />
       </div>
     </div>
   )

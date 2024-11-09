@@ -37,7 +37,7 @@ async function getState() {
 }
 
 async function main() {
-  console.log('jetze');
+  let hidden = 0;
   document.querySelectorAll('a, button, span, input').forEach((e) => {
     if (evilWords.some(word => e.textContent.toLowerCase().includes(word))) {
       evilElements.push(e);
@@ -45,7 +45,7 @@ async function main() {
     }
   })
   const state = await getState();
-  if (state !== 'deactivated') {
+  if (state === null) {
     hideElements();
   }
   chrome.runtime.sendMessage({ hidden });
@@ -61,8 +61,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     timeoutTimer = setTimeout(() => {
       hideElements();
       setHostState(request.hostname, null)
-      // }, 600000);
-    }, 60000);
+    }, 10000);
+    // }, 600000);
   }
   if (request.action === 'resume') {
     if (timeoutTimer) clearTimeout(timeoutTimer);
@@ -72,5 +72,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'deactivated') {
     showElements();
     setHostState(request.hostname, 'deactivated')
+  }
+  if (request.action === 'pageLoaded') {
+    main();
+    setTimeout(main, 3000); // for weird websites
   }
 });

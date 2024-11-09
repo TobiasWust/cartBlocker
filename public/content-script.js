@@ -29,10 +29,13 @@ function showElements() {
 
 async function main() {
   hidden = 0;
-  document.querySelectorAll('a, button, span, input').forEach((e) => {
+  evilElements = [];
+  document.querySelectorAll('a, button, input').forEach((e) => {
     if (evilWords.some(word =>
-      e.textContent.toLowerCase().includes(word)
+    (
+      (e?.textContent.toLowerCase().includes(word) && e?.textContent.replace(/\s/g, '').length < 30)
       || e.title?.toLowerCase().includes(word)
+    )
     )) {
       evilElements.push(e);
       hidden++;

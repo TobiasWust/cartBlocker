@@ -11,7 +11,6 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 
   if (request.action === 'startTimer') {
     timeoutTimer = setTimeout(() => {
-      console.log('komisch');
       chrome.tabs.sendMessage(sender.tab.id, { action: 'resume' });
     }, 600000);
   }

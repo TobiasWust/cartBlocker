@@ -1,4 +1,8 @@
 let timeoutTimer;
+function setHostState(host, state) {
+  chrome.storage.local.set({ [host]: state });
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender) {
   if (request.hidden) {
     chrome.action.setBadgeText(
@@ -11,7 +15,8 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 
   if (request.action === 'startTimer') {
     timeoutTimer = setTimeout(() => {
-      chrome.tabs.sendMessage(sender.tab.id, { action: 'resume' });
+      chrome.tabs.sendMessage(sender.tab.id, { action: 'resume' }).catch();
+      setHostState(request.hostname, null)
     }, 600000);
   }
   if (request.action === 'clearTimer') {

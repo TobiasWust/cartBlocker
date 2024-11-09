@@ -60,8 +60,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   if (request.action === 'resume') {
     hideElements();
-    chrome.runtime.sendMessage({ action: 'clearTimer' });
-    setHostState(hostname, null)
+    chrome.runtime.sendMessage({ action: 'clearTimer', host: hostname });
   }
   if (request.action === 'deactivated') {
     showElements();

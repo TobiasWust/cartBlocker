@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CartBlocker",
-  "description": "CartBlocker saves you money by blocking you from buying things you don't need.",
+  "description": "CartBlocker - Break Free from Impulse Shopping. Saves you money by blocking you from buying things you don't need.",
   "version": "1.0.0",
   "action": {
     "default_icon": "icon.png",

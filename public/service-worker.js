@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener(function messageListener(request, sender) {
   if (request.action === 'setTimer') {
     timeoutTimer = setTimeout(function timeoutFunction() {
       setHostState(request.hostname, null)
-    }, 20000);
+    }, 600000);
   }
   if (request.action === 'clearTimer') {
     clearTimeout(timeoutTimer);

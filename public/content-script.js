@@ -70,14 +70,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 chrome.storage.onChanged.addListener((data) => {
   if (data[hostname]) {
-    if (data[hostname].newValue === 'deactivated') {
-      showElements();
-    } else if (data[hostname].newValue === 'paused') {
-      showElements();
+    if (data[hostname].newValue === 'paused') {
       chrome.runtime.sendMessage({ action: 'setTimer', hostname });
     } else {
-      hideElements();
       chrome.runtime.sendMessage({ action: 'clearTimer' });
     }
+    main();
   }
 });

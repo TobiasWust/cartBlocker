@@ -25,17 +25,17 @@ function App() {
       const hostname = new URL(tab.url).hostname;
       if (!hostname) return;
 
-      chrome.storage.local.get(hostname).then((data) => {
+      chrome?.storage?.local?.get(hostname).then((data) => {
         if (data[hostname]) setState(data[hostname])
       })
 
-      chrome.storage.onChanged.addListener((changes) => handleStorageChange(changes, hostname));
+      chrome?.storage?.onChanged?.addListener((changes) => handleStorageChange(changes, hostname));
     }
 
     prepareStorage();
 
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      chrome?.storage?.onChanged?.removeListener(handleStorageChange);
     };
 
   }, [setState]);

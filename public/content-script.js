@@ -1,6 +1,6 @@
 const evilWords = [
   "wagen", "kaufen", "bestellen", "warenkorb", "kasse",
-  "cart", "buy", "order", "checkout",
+  "cart", "buy", "order", "checkout", "purchase",
   "carrito", "comprar", "orden",
   "panier", "acheter", "commande",
   "carrello", "compra", "ordine",
@@ -27,16 +27,25 @@ function showElements() {
   chrome.runtime.sendMessage({ hidden: 0 });
 }
 
+function isChildOfAnyElement(element, elements) {
+  return elements.some(parent => parent.contains(element));
+}
+
+
 async function main() {
   hidden = 0;
   evilElements = [];
-  document.querySelectorAll('a, button, input').forEach((e) => {
+  document.querySelectorAll('a, button, span, input').forEach((e) => {
     if (evilWords.some(word =>
     (
       (e?.textContent.toLowerCase().includes(word) && e?.textContent.replace(/\s/g, '').length < 30)
       || e.title?.toLowerCase().includes(word)
+      || e.alt?.toLowerCase().includes(word)
+      || e.src?.toLowerCase().includes(word)
+      || e.href?.toLowerCase().includes(word)
     )
     )) {
+      if (isChildOfAnyElement(e, evilElements)) return;
       evilElements.push(e);
       hidden++;
     }
